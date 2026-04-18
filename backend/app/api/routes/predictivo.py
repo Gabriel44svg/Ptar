@@ -2,12 +2,14 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-from typing import List
+from typing import List, Optional
 from app.db.database import get_db
 from app.models.laboratorio import RegistroMuestreo 
 from app.services.markov import clasificar_estado, calcular_matriz_transicion
 from app.core.security import get_usuario_actual
 from app.models.usuarios import Usuario
+from sqlalchemy import func
+from app.models.riego import RegistroRiego
 
 router = APIRouter()
 
@@ -23,35 +25,65 @@ PARAMETROS_MAP = {
 
 @router.get("/graficas")
 def obtener_datos_graficas(
-    id_proceso: int = Query(..., description="ID del parámetro químico"),
-    dias: int = Query(30, description="Rango de días"),
+    id_proceso: str = Query(..., description="ID del parámetro o 'riego'"),
+    fecha_inicio: Optional[str] = Query(None),
+    fecha_fin: Optional[str] = Query(None),
+    agrupacion: str = Query("dias", description="dias, meses, anos"), # <--- NUEVO PARÁMETRO
     db: Session = Depends(get_db),
     usuario_actual: Usuario = Depends(get_usuario_actual)
 ):
-    if id_proceso not in PARAMETROS_MAP:
-        return []
+    # --- 1. CASO RIEGO (Suma de volúmenes) ---
+    if id_proceso == 'riego':
+        query = db.query(RegistroRiego)
+        if fecha_inicio: query = query.filter(RegistroRiego.fecha >= fecha_inicio)
+        if fecha_fin: query = query.filter(RegistroRiego.fecha <= fecha_fin)
+        registros = query.order_by(RegistroRiego.fecha.asc()).all()
 
-    mapa = PARAMETROS_MAP[id_proceso]
+        agrupados = {}
+        for r in registros:
+            # Extraemos la fecha según lo que el usuario quiera ver
+            if agrupacion == 'anos': key = r.fecha.strftime('%Y')
+            elif agrupacion == 'meses': key = r.fecha.strftime('%Y-%m')
+            else: key = r.fecha.strftime('%Y-%m-%d')
+            
+            # Sumamos los volúmenes
+            agrupados[key] = agrupados.get(key, 0.0) + float(r.volumen_usado)
+        
+        return [{"fecha": k, "valor": round(v, 2)} for k, v in agrupados.items()]
+
+    # --- 2. CASO LABORATORIO (Promedio de lecturas químicas) ---
+    id_proceso_int = int(id_proceso)
+    if id_proceso_int not in PARAMETROS_MAP: return []
+    
+    mapa = PARAMETROS_MAP[id_proceso_int]
     columna = mapa["col"]
     
-    # Iniciamos la consulta base
     query = db.query(RegistroMuestreo).filter(columna.isnot(None))
-    
-    # Si 'dias' es mayor a 0, aplicamos el filtro de fecha. Si es 0, trae todo.
-    if dias > 0:
-        fecha_limite = datetime.now().date() - timedelta(days=dias)
-        query = query.filter(RegistroMuestreo.fecha >= fecha_limite)
-        
+    if fecha_inicio: query = query.filter(RegistroMuestreo.fecha >= fecha_inicio)
+    if fecha_fin: query = query.filter(RegistroMuestreo.fecha <= fecha_fin)
     registros = query.order_by(RegistroMuestreo.fecha.asc(), RegistroMuestreo.hora.asc()).all()
 
-    datos = []
-    for r in registros:
-        valor = getattr(r, columna.key)
-        datos.append({
-            "fecha": f"{r.fecha.strftime('%m-%d')} {r.hora.strftime('%H:%M')}", 
-            "valor": float(valor)
-        })
-    return datos
+    # Si quiere ver meses o años, hacemos PROMEDIOS
+    if agrupacion in ['meses', 'anos']:
+        agrupados = {}
+        for r in registros:
+            val = getattr(r, columna.key)
+            key = r.fecha.strftime('%Y') if agrupacion == 'anos' else r.fecha.strftime('%Y-%m')
+            
+            if key not in agrupados: agrupados[key] = []
+            agrupados[key].append(float(val))
+            
+        return [{"fecha": k, "valor": round(sum(v)/len(v), 2)} for k, v in agrupados.items()]
+    
+    # Si quiere ver días, mostramos cada lectura exacta con su hora
+    else:
+        datos = []
+        for r in registros:
+            datos.append({
+                "fecha": f"{r.fecha.strftime('%Y-%m-%d')} {r.hora.strftime('%H:%M')}", 
+                "valor": float(getattr(r, columna.key))
+            })
+        return datos
 
 @router.get("/markov")
 def obtener_modelo_markov(

@@ -1,0 +1,22 @@
+# --- Framework y Servidor ---
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.9
+
+# --- Base de Datos y ORM ---
+SQLAlchemy>=2.0.25
+psycopg2-binary>=2.9.9
+
+# --- Seguridad y Autenticación ---
+passlib[bcrypt]>=1.7.4
+PyJWT>=2.8.0
+
+# --- Generación de Reportes (PDF y Gráficas) ---
+reportlab>=4.0.9
+matplotlib>=3.8.2
+PyPDF2>=3.0.1
+
+# --- Variables de Entorno y Utilidades ---
+python-dotenv>=1.0.1
+pydantic>=2.5.3
+pydantic-settings>=2.1.0
