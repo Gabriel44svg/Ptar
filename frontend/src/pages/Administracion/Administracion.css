@@ -1,0 +1,84 @@
+/* HEADER */
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* BADGES ROLES */
+.badge-rol {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  border: 1px solid transparent;
+}
+
+/* SUPER ADMIN */
+.badge-rol.super-admin {
+  background-color: #08345c;
+  color: #ffffff;
+  border: 1px solid #f7a900;
+}
+
+/* ADMIN */
+.badge-rol.administrador {
+  background-color: #06456f;
+  color: #ffffff;
+  border: 1px solid rgba(247,169,0,0.4);
+}
+
+/* REGISTRO / EDITOR */
+.badge-rol.usuario-registro,
+.badge-rol.editor {
+  background-color: #f7a900;
+  color: #08345c;
+}
+
+/* LECTOR */
+.badge-rol.usuario-lector,
+.badge-rol.lector {
+  background-color: rgba(255,255,255,0.1);
+  color: #cbd5e1;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* BADGES ACCIONES */
+.badge-accion {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* DELETE */
+.badge-accion.delete {
+  background-color: rgba(189, 140, 0, 0.2);
+  color: #ffd43b;
+  border: 1px solid #BD8C00;
+}
+
+/* UPDATE */
+.badge-accion.update {
+  background-color: rgba(247, 169, 0, 0.2);
+  color: #ffe066;
+  border: 1px solid #f7a900;
+}
+
+/* TABLA */
+.tabla-auditoria td {
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+/* RESPONSABLE */
+.responsable {
+  color: #f7a900;
+  font-weight: bold;
+}
+
+/* VALOR ANTERIOR */
+.valor-anterior {
+  font-family: monospace;
+  color: #cbd5e1;
+}

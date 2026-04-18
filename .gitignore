@@ -1,0 +1,29 @@
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Archivos de entorno
+.env
+backend/.env
+*.env
+
+# Script de inicialización de BD
+backend/app/db/init_db.py
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de Python
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Dependencias (Node si usas frontend)
+node_modules/
+
+# Archivos de configuración sensibles
+*.sqlite3

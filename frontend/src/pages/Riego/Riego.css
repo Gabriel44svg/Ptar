@@ -1,0 +1,242 @@
+/* GRID PRINCIPAL */
+.riego-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  align-items: stretch;
+}
+
+/* RESPONSIVE  */
+@media (max-width: 900px) {
+  .riego-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* COLUMNA DERECHA */
+.riego-column-right {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* FILA DE INPUTS */
+.input-row {
+  display: flex;
+  gap: 15px;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+/* INPUTS Y SELECTS */
+select,
+input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #BD8C00;
+  background: rgba(6, 69, 111, 0.9); /* azul */
+  color: #ffffff;
+  width: 100%;
+  outline: none;
+  transition: all 0.25s ease;
+  font-size: 14px;
+}
+
+/* FOCUS */
+select:focus,
+input:focus {
+  border: 1px solid #f7a900;
+  box-shadow: 0 0 8px rgba(247, 169, 0, 0.6);
+}
+
+/* PANEL */
+.panel-oscuro {
+  background: rgba(8, 52, 92, 0.95); /* azul institucional */
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(247, 169, 0, 0.2);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  transition: 0.3s;
+}
+
+.panel-oscuro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+
+/* SIMULADOR */
+.simulador-panel {
+  border: 1px solid #f7a900;
+  background: linear-gradient(
+    145deg,
+    rgba(6, 69, 111, 0.95),
+    rgba(8, 52, 92, 0.95)
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+/* EFECTO BRILLO */
+.simulador-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(247, 169, 0, 0.25),
+    transparent
+  );
+  transition: 0.6s;
+}
+
+.simulador-panel:hover::before {
+  left: 100%;
+}
+
+/* BOTÓN */
+.btn-optimizar {
+  background: linear-gradient(135deg, #f7a900, #BD8C00);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.btn-optimizar:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(247, 169, 0, 0.5);
+}
+
+.btn-optimizar:disabled {
+  background: #555;
+  color: #aaa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* TEXTOS */
+.mb-2 {
+  margin-bottom: 15px;
+}
+
+label {
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: #e0e0e0;
+}
+
+h3 {
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.instrucciones {
+  font-size: 13px;
+  color: #cbd5e1;
+  margin-bottom: 15px;
+}
+
+/* RESULTADOS */
+.resultados-simulacion {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(247,169,0,0.3);
+}
+
+.resultados-simulacion h4 {
+  margin: 0 0 10px 0;
+  color: #f7a900;
+}
+
+/* RESUMEN */
+.resumen-simulacion {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  background-color: #06456f;
+  padding: 10px;
+  border-radius: 6px;
+  color: #fff;
+}
+
+/* LISTA RESULTADOS */
+.lista-resultados {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lista-resultados li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #08345c;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border-left: 4px solid #f7a900;
+}
+
+.zona-nombre {
+  font-weight: bold;
+}
+
+.zona-volumen {
+  color: #ffd43b; /* dorado claro */
+}
+
+/* ALERTA */
+.alerta-demanda {
+  background-color: rgba(247, 169, 0, 0.2);
+  border: 1px solid #f7a900;
+  color: #ffe066;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* ZONAS */
+.lista-zonas {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.zona-item {
+  display: flex;
+  justify-content: space-between;
+  background-color: #06456f;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+/* BOTÓN ELIMINAR */
+.btn-eliminar-sm {
+  background-color: #5a1a1a;
+  color: #ffb3b3;
+  border: 1px solid #c92a2a;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 2px 8px;
+  transition: 0.2s;
+}
+
+.btn-eliminar-sm:hover {
+  background-color: #7a1f1f;
+}

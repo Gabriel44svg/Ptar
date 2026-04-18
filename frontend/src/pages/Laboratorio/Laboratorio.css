@@ -1,0 +1,74 @@
+/* FORMULARIO BITÁCORA */
+.form-bitacora {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* SECCIONES */
+.form-seccion {
+  background-color: rgba(6, 69, 111, 0.25); /* azul suave */
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 4px solid #f7a900; /* dorado */
+}
+
+/* TÍTULO SECCIÓN */
+.form-seccion h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #f7a900;
+  font-weight: bold;
+}
+
+/* GRID */
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.tanques-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+/* CAJA TANQUES */
+.tanque-caja {
+  border-left: none;
+  border-top: 4px solid #f7a900; /* antes verde → ahora consistente */
+  background-color: rgba(8, 52, 92, 0.9);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+/* INPUT FULL */
+.w-100 {
+  width: 100%;
+  font-size: 1.05rem;
+  padding: 12px;
+}
+
+/* TABLA COMPLETA */
+.tabla-completa th, 
+.tabla-completa td {
+  padding: 8px 5px !important;
+  font-size: 0.85rem !important;
+  text-align: center;
+  white-space: nowrap;
+  color: #ffffff;
+}
+
+/* DIVISIÓN VISUAL */
+.tabla-completa .borde-derecho {
+  border-right: 2px solid rgba(247,169,0,0.4) !important;
+}
+
+/* ENCABEZADO DESTACADO */
+.tabla-completa .text-center {
+  text-align: center;
+  color: #f7a900;
+  background-color: #08345c;
+  font-weight: bold;
+}

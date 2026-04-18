@@ -1,0 +1,145 @@
+.controles-filtros {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* SELECTOR DE FECHA */
+.selector-fecha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #06456f; /* Azul secundario */
+  padding: 6px 15px;
+  border-radius: 8px;
+  border: 1px solid #BD8C00; /* Dorado oscuro */
+}
+
+.selector-fecha select {
+  background-color: transparent;
+  border: none;
+  color: #f7a900; /* Dorado */
+  font-weight: bold;
+  font-size: 1rem;
+  outline: none;
+}
+
+/* CONTENEDOR GRÁFICA */
+.contenedor-grafica {
+  margin-top: 20px;
+  background-color: rgba(6, 69, 111, 0.25);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* MARKOV */
+.markov-container {
+  display: flex;
+  gap: 30px;
+  margin-top: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.markov-info {
+  flex: 1;
+  background-color: #08345c; /* Azul institucional */
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 5px solid #f7a900; /* Dorado fuerte */
+  color: #ffffff;
+}
+
+.markov-info p {
+  margin: 5px 0;
+}
+
+/* MATRIZ */
+.matriz-wrapper {
+  flex: 2;
+  overflow-x: auto;
+}
+
+.tabla-matriz {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  background-color: #06456f;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabla-matriz th, 
+.tabla-matriz td {
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* ENCABEZADOS */
+.tabla-matriz th {
+  background-color: #08345c;
+  color: #f7a900; /* Dorado */
+  font-weight: bold;
+}
+
+.tabla-matriz tbody th {
+  color: #ffffff;
+}
+
+/* CELDAS */
+.tabla-matriz td {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+/* INTERPRETACIÓN */
+.interpretacion-markov {
+  flex: 1;
+  min-width: 300px;
+  background-color: #08345c;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #BD8C00;
+  color: #ffffff;
+}
+
+.interpretacion-markov h4 {
+  margin-top: 0;
+  color: #f7a900; /* Dorado en lugar de verde */
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 10px;
+}
+
+/* LISTA */
+.lista-probabilidades {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+
+.lista-probabilidades li {
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+  background-color: #06456f;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  border-left: 4px solid #f7a900;
+}
+
+/* ICONO */
+.indicador {
+  margin-right: 10px;
+  font-size: 1.2rem;
+  color: #f7a900;
+}
+
+/* UTILIDAD */
+.mt-2 { 
+  margin-top: 10px; 
+}

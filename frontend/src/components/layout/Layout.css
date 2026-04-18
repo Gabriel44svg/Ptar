@@ -1,0 +1,89 @@
+/* CONTENEDOR GENERAL */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #08345c;
+  overflow: hidden;
+}
+
+/* HEADER */
+.top-header {
+  height: 80px;
+  background-color: #08345c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  color: white;
+  border-bottom: 4px solid #f7a900;
+}
+
+/* LOGOS */
+.header-logos {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.h-logo {
+  height: 50px;
+}
+
+.h-logo-center {
+  height: 60px;
+}
+
+/* USUARIO */
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* LOGOUT */
+.btn-logout {
+  background-color: #BD8C00;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* NAVBAR */
+.navbar {
+  background-color: #f7a900;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-main,
+.nav-sub {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  position: relative;
+}
+
+/* ACTIVO */
+.navbar a.active {
+  border-bottom: 2px solid white;
+}
+
+/*  CONTENIDO SIN MÁRGENES */
+.content-area {
+  flex: 1;
+  padding: 0; 
+  overflow-y: auto;
+  background-color: #08345c;
+}
