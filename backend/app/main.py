@@ -7,10 +7,9 @@ from app.db.database import engine, Base
 # Inicializamos la aplicación FastAPI
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    version=settings.VERSION,
+    version="1.0.1-CORS-FIX", 
     description="API REST para el monitoreo y control de la PTAR"
 )
-
 
 app.add_middleware(
     CORSMiddleware,
