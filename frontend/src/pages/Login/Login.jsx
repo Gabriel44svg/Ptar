@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../../services/api'
+import api from '../../services/api'; // Importamos la configuración de producción
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
@@ -20,13 +20,16 @@ export const Login = () => {
     e.preventDefault();
     setError('');
 
+    // Preparamos los datos en formato x-www-form-urlencoded como requiere OAuth2
     const formData = new URLSearchParams();
     formData.append('username', correo);
     formData.append('password', password);
 
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:8000/api/auth/login',
+      // Usamos 'api' en lugar de 'axios' directo. 
+      // La URL base ya está en api.js, así que solo usamos la ruta final.
+      const response = await api.post(
+        '/auth/login',
         formData,
         {
           headers: {
@@ -37,17 +40,20 @@ export const Login = () => {
 
       const { access_token, nombre, rol } = response.data;
 
+      // Guardamos la sesión en el navegador
       localStorage.setItem('token', access_token);
       localStorage.setItem('usuarioNombre', nombre);
       localStorage.setItem('usuarioRol', rol);
 
+      // ¡Al éxito!
       navigate('/dashboard');
 
     } catch (err) {
+      console.error('Error de login:', err);
       if (err.response && err.response.status === 401) {
         setError('Correo o contraseña incorrectos');
       } else {
-        setError('Error al conectar con el servidor');
+        setError('Error al conectar con el servidor. Verifica tu conexión.');
       }
     }
   };
@@ -55,7 +61,7 @@ export const Login = () => {
   return (
     <div className="login-page">
 
-      {/* Encabezado Azul Institucional */}
+      {/* Encabezado Institucional */}
       <header className="main-header">
         <img src={unamLogo} alt="UNAM" className="header-logo" />
         <img src={fesLogo} alt="FES Acatlán" className="header-logo" />
@@ -81,7 +87,8 @@ export const Login = () => {
               <div style={{
                 color: '#ff6b6b',
                 marginBottom: '10px',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontWeight: 'bold'
               }}>
                 {error}
               </div>
@@ -90,10 +97,10 @@ export const Login = () => {
             <form onSubmit={handleLogin} className="login-form">
 
               <div className="input-group">
-                <label>Correo electronico</label>
+                <label>Correo electrónico</label>
                 <input
                   type="email"
-                  placeholder='Ejemp "424813@pcpuma.acatlan.unam.mx"'
+                  placeholder='Ej. "admin@fes.unam.mx"'
                   value={correo}
                   onChange={(e) => setCorreo(e.target.value)}
                   required
