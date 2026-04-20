@@ -3,6 +3,15 @@ from sqlalchemy import Column, Integer, Float, String, Date, Time, ForeignKey, T
 from sqlalchemy.orm import relationship
 from app.db.database import Base
 
+# --- NUEVA TABLA PARA EL SIMULADOR DE I.O. ---
+class ZonaRiego(Base):
+    __tablename__ = "zonas_riego"
+    id_zona = Column(Integer, primary_key=True, index=True)
+    nombre_zona = Column(String(255), nullable=False)
+    demanda_agua = Column(Float, default=0.0)
+    costo_distribucion = Column(Float, default=1.0)
+
+# --- TU TABLA F01-PTAR-15 INTACTA ---
 class RegistroRiego(Base):
     __tablename__ = "registros_riego"
 

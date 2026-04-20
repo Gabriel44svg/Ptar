@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.routes import auth, laboratorio, riego, predictivo, reportes, admin
+from app.api.routes import auth, laboratorio, predictivo, reportes, admin, riego
 from app.db.database import engine, Base
 
 # Inicializamos la aplicación FastAPI
@@ -31,7 +31,6 @@ app.add_middleware(
 # -----------------------------------------------------------------------------
 # REGISTRO DE RUTAS (Endpoints)
 # -----------------------------------------------------------------------------
-# Conectamos el archivo auth.py al prefijo /api/auth
 app.include_router(auth.router, prefix="/api/auth", tags=["Autenticación"])
 app.include_router(laboratorio.router, prefix="/api/laboratorio", tags=["Módulo de Laboratorio"])
 app.include_router(riego.router, prefix="/api/riego", tags=["Módulo de Riego"])
@@ -50,5 +49,5 @@ def read_root():
         "version": settings.VERSION
     }
 
-
+# Crea las tablas en PostgreSQL al iniciar (si es que no existen)
 Base.metadata.create_all(bind=engine)
