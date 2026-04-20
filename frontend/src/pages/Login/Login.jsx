@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 // Importación de las imágenes
-import fondo from '../../assets/img/Fondo.png';
+import fondo from '../../assets/img/fondo.png';
 import ptarLogo from '../../assets/img/ptar.png';
 import unamLogo from '../../assets/img/logounam.png';
 import fesLogo from '../../assets/img/logofes.png';
