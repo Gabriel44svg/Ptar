@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../services/api'
 import './Riego.css'; // Asegúrate de tener aquí los estilos de la tabla gigante
 import fondo from '../../assets/img/fondo.png';
 

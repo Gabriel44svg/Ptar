@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../services/api'
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment, Float } from '@react-three/drei';
 import fondo from '../../assets/img/fondo.png';
-import './Dashboard.css'; // Asegúrate de renombrar tu CSS a este nombre
+import './Dashboard.css'; 
 
 // --- COMPONENTE QUE CARGA TU MODELO 3D ---
 const ModeloGota = () => {

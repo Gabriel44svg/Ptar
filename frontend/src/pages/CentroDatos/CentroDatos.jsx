@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../services/api'
 import './CentroDatos.css';
 import fondo from '../../assets/img/fondo.png';
 

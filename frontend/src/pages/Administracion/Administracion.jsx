@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../services/api'
 import './Administracion.css';
 import fondo from '../../assets/img/fondo.png';
 
