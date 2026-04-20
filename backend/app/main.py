@@ -50,4 +50,4 @@ def read_root():
     }
 
 # Crea las tablas en PostgreSQL al iniciar (si es que no existen)
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
