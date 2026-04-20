@@ -11,14 +11,6 @@ app = FastAPI(
     description="API REST para el monitoreo y control de la PTAR"
 )
 
-# -----------------------------------------------------------------------------
-# CONFIGURACIÓN DE CORS (Para que React pueda conectarse sin bloqueos)
-# -----------------------------------------------------------------------------
-# Aquí definimos las URL de nuestro frontend. Vite usa el 5173 por defecto.
-# origins = [
-#     "http://localhost:5173",
-#     "http://127.0.0.1:5173",
-# ]
 
 app.add_middleware(
     CORSMiddleware,
