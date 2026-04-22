@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../services/api'
+import api from '../../services/api'; // Usamos la configuración centralizada de la API
 import './Laboratorio.css';
 import fondo from '../../assets/img/fondo.png';
 
 export const Laboratorio = () => {
   const [mensaje, setMensaje] = useState({ texto: '', tipo: '' });
   const [historial, setHistorial] = useState([]);
-  const [editandoId, setEditandoId] = useState(null); // NUEVO: Rastrea si estamos editando
-
+  const [editandoId, setEditandoId] = useState(null); 
+  
   const estadoInicial = {
     fecha: new Date().toISOString().split('T')[0],
     hora: new Date().toTimeString().split(' ')[0].substring(0, 5),
@@ -31,13 +31,11 @@ export const Laboratorio = () => {
 
   const cargarHistorial = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await axios.get('http://127.0.0.1:8000/api/laboratorio/registros', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Petición GET usando api. El token se añade automáticamente gracias al interceptor.
+      const res = await api.get('/laboratorio/registros');
       setHistorial(res.data);
     } catch (error) {
-      console.error("Error al cargar historial");
+      console.error("Error al cargar historial", error);
     }
   };
 
@@ -48,8 +46,6 @@ export const Laboratorio = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      
       const payload = {};
       Object.keys(formulario).forEach(key => {
         if (formulario[key] === '') {
@@ -61,16 +57,12 @@ export const Laboratorio = () => {
         }
       });
 
-      // Si estamos editando, hacemos un PUT, si no, hacemos un POST
+      // Peticiones PUT y POST usando la instancia api
       if (editandoId) {
-        await axios.put(`http://127.0.0.1:8000/api/laboratorio/registros/${editandoId}`, payload, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await api.put(`/laboratorio/registros/${editandoId}`, payload);
         setMensaje({ texto: 'Registro modificado exitosamente.', tipo: 'exito' });
       } else {
-        await axios.post('http://127.0.0.1:8000/api/laboratorio/registros', payload, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await api.post('/laboratorio/registros', payload);
         setMensaje({ texto: 'Registro F02-PTAR-02 guardado exitosamente.', tipo: 'exito' });
       }
 
@@ -78,6 +70,7 @@ export const Laboratorio = () => {
       setEditandoId(null); // Salimos del modo edición
       cargarHistorial();
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: 'Error al procesar el registro. Revisa los datos.', tipo: 'error' });
     }
   };
@@ -85,18 +78,17 @@ export const Laboratorio = () => {
   const eliminarRegistro = async (id) => {
     if (!window.confirm('¿Estás seguro de eliminar este registro de la bitácora? Esta acción no se puede deshacer.')) return;
     try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://127.0.0.1:8000/api/laboratorio/registros/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Petición DELETE usando api
+      await api.delete(`/laboratorio/registros/${id}`);
       setMensaje({ texto: 'Registro eliminado exitosamente.', tipo: 'exito' });
       cargarHistorial();
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: 'Error al eliminar. Permisos insuficientes.', tipo: 'error' });
     }
   };
 
-  // NUEVO: Función para cargar los datos a los inputs y subir la pantalla
+  // Función para cargar los datos a los inputs y subir la pantalla
   const cargarParaEditar = (reg) => {
     setEditandoId(reg.id_registro);
     setFormulario({
@@ -114,7 +106,7 @@ export const Laboratorio = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' }); 
   };
 
-  // NUEVO: Cancelar la edición
+  // Cancelar la edición
   const cancelarEdicion = () => {
     setFormulario(estadoInicial);
     setEditandoId(null);
@@ -136,7 +128,6 @@ export const Laboratorio = () => {
         }}
       >
       <div className="header-modulo">
-        {/* TÍTULO EN COLOR BLANCO */}
         <h2 className="modulo-title" style={{ color: 'white' }}>
           {editandoId ? 'Modificando Registro F02-PTAR-02' : 'Captura de Bitácora F02-PTAR-02'}
         </h2>

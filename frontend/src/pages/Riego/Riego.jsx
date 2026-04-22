@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../services/api'
-import './Riego.css'; // Asegúrate de tener aquí los estilos de la tabla gigante
+import api from '../../services/api'; // Usamos tu instancia configurada
+import './Riego.css'; 
 import fondo from '../../assets/img/fondo.png';
 
 export const Riego = () => {
@@ -34,13 +34,10 @@ export const Riego = () => {
 
   const cargarDatos = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      
-      // Traemos las zonas para el simulador y los registros para la tabla
+      // Peticiones limpias usando api (el token viaja solo)
       const [resZonas, resRegistros] = await Promise.all([
-        axios.get('http://127.0.0.1:8000/api/riego/zonas', config),
-        axios.get('http://127.0.0.1:8000/api/riego/registros', config)
+        api.get('/riego/zonas'),
+        api.get('/riego/registros')
       ]);
       setZonas(resZonas.data);
       setHistorial(resRegistros.data);
@@ -60,7 +57,6 @@ export const Riego = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       const payload = { ...formulario };
       
       // Convertir campos vacíos a null y textos a números donde corresponda
@@ -69,10 +65,10 @@ export const Riego = () => {
       });
 
       if (editandoId) {
-        await axios.put(`http://127.0.0.1:8000/api/riego/registros/${editandoId}`, payload, { headers: { Authorization: `Bearer ${token}` } });
+        await api.put(`/riego/registros/${editandoId}`, payload);
         setMensaje({ texto: 'Registro modificado exitosamente.', tipo: 'exito' });
       } else {
-        await axios.post('http://127.0.0.1:8000/api/riego/registros', payload, { headers: { Authorization: `Bearer ${token}` } });
+        await api.post('/riego/registros', payload);
         setMensaje({ texto: 'Registro F01-PTAR-15 guardado exitosamente.', tipo: 'exito' });
       }
 
@@ -80,6 +76,7 @@ export const Riego = () => {
       setEditandoId(null);
       cargarDatos();
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: 'Error al procesar el registro.', tipo: 'error' });
     }
   };
@@ -101,8 +98,7 @@ export const Riego = () => {
   const eliminarRegistro = async (id) => {
     if (!window.confirm('¿Seguro de eliminar este registro de riego?')) return;
     try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://127.0.0.1:8000/api/riego/registros/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      await api.delete(`/riego/registros/${id}`);
       setMensaje({ texto: 'Registro eliminado.', tipo: 'exito' });
       cargarDatos();
     } catch (e) { setMensaje({ texto: 'Error al eliminar.', tipo: 'error' }); }
@@ -112,12 +108,12 @@ export const Riego = () => {
   const handleCrearZona = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('http://127.0.0.1:8000/api/riego/zonas', nuevaZona, { headers: { Authorization: `Bearer ${token}` } });
+      await api.post('/riego/zonas', nuevaZona);
       setMensaje({ texto: 'Zona creada.', tipo: 'exito' });
       setNuevaZona({ nombre_zona: '', demanda_agua: 0, costo_distribucion: 1 });
       cargarDatos();
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: 'Error al crear zona.', tipo: 'error' });
     }
   };
@@ -125,8 +121,7 @@ export const Riego = () => {
   const eliminarZona = async (id_zona) => {
     if (!window.confirm('¿Eliminar esta zona del simulador?')) return;
     try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://127.0.0.1:8000/api/riego/zonas/${id_zona}`, { headers: { Authorization: `Bearer ${token}` } });
+      await api.delete(`/riego/zonas/${id_zona}`);
       setMensaje({ texto: 'Zona eliminada.', tipo: 'exito' });
       cargarDatos();
     } catch (error) {
@@ -137,13 +132,12 @@ export const Riego = () => {
   const ejecutarSimulacion = async () => {
     if (!volumenSimulacion || volumenSimulacion <= 0) return setMensaje({ texto: 'Volumen inválido.', tipo: 'error' });
     try {
-      const token = localStorage.getItem('token');
-      const res = await axios.post('http://127.0.0.1:8000/api/riego/simular', 
-        { volumen_disponible: parseFloat(volumenSimulacion) },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await api.post('/riego/simular', { 
+        volumen_disponible: parseFloat(volumenSimulacion) 
+      });
       setResultadosSimulacion(res.data);
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: 'Error en la simulación matemática.', tipo: 'error' });
     }
   };
