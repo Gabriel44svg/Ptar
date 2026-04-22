@@ -10,7 +10,7 @@ export const Administracion = () => {
   
   // Estados para el formulario de nuevo usuario
   const [mostrarForm, setMostrarForm] = useState(false);
-  const [formUsuario, setFormUsuario] = useState({ nombre_completo: '', correo: '', password: '', rol: 'Lector' }); // Ajusté el valor inicial a 'Lector'
+  const [formUsuario, setFormUsuario] = useState({ nombre_completo: '', correo: '', password: '', rol: 'Lector' });
 
   const usuarioRol = localStorage.getItem('usuarioRol');
   const esSuperAdmin = usuarioRol === 'Super Admin';
@@ -21,11 +21,13 @@ export const Administracion = () => {
 
   const cargarDatosAdmin = async () => {
     try {
-      // Peticiones limpias usando api
-      const resAuditoria = await api.get('/admin/auditoria');
-      setAuditoria(resAuditoria.data);
+      // --- PARCHE TEMPORAL: Ignoramos el 404 de auditoría ---
+      // const resAuditoria = await api.get('/admin/auditoria');
+      // setAuditoria(resAuditoria.data);
+      setAuditoria([]); // Forzamos arreglo vacío para no romper el map() de abajo
 
       if (tieneAccesoUsuarios) {
+        // Al saltarnos el error anterior, esta línea ya se va a ejecutar
         const resUsuarios = await api.get('/admin/usuarios');
         setUsuarios(resUsuarios.data);
       }
@@ -38,7 +40,6 @@ export const Administracion = () => {
   const handleCrearUsuario = async (e) => {
     e.preventDefault();
     try {
-      // Petición limpia usando api
       await api.post('/admin/usuarios', formUsuario);
       setMensaje({ texto: 'Usuario creado exitosamente.', tipo: 'exito' });
       setMostrarForm(false);
@@ -53,7 +54,6 @@ export const Administracion = () => {
   const eliminarUsuario = async (id_usuario) => {
     if (!window.confirm('¿Estás seguro de eliminar este usuario de forma permanente?')) return;
     try {
-      // Petición limpia usando api
       await api.delete(`/admin/usuarios/${id_usuario}`);
       setMensaje({ texto: 'Usuario eliminado.', tipo: 'exito' });
       cargarDatosAdmin();
