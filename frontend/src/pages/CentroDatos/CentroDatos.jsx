@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../../services/api'
+import api from '../../services/api'; // Usamos tu instancia configurada
 import './CentroDatos.css';
 import fondo from '../../assets/img/fondo.png';
 
@@ -16,14 +16,15 @@ export const CentroDatos = () => {
   // Descarga Dinámica (CSV o PDF) enviando el Tipo de Reporte
   const descargarDocumento = async (formato) => {
     try {
-      const token = localStorage.getItem('token');
       const params = new URLSearchParams();
       params.append('tipo', tipoReporte); // Enviamos si es laboratorio o riego
       if (fechaInicio) params.append('fecha_inicio', fechaInicio);
       if (fechaFin) params.append('fecha_fin', fechaFin);
       
-      const url = `http://127.0.0.1:8000/api/reportes/exportar/${formato}?${params.toString()}`;
-      const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` }, responseType: 'blob' });
+      // Petición limpia usando api. Agregamos responseType: 'blob' para que entienda que es un archivo
+      const response = await api.get(`/reportes/exportar/${formato}?${params.toString()}`, { 
+        responseType: 'blob' 
+      });
 
       const extension = formato === 'pdf' ? 'application/pdf' : 'text/csv';
       const urlBlob = window.URL.createObjectURL(new Blob([response.data], { type: extension }));
@@ -36,6 +37,7 @@ export const CentroDatos = () => {
       
       setMensaje({ texto: `Reporte ${formato.toUpperCase()} descargado con éxito.`, tipo: 'exito' });
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: `Error al generar el documento ${formato.toUpperCase()}.`, tipo: 'error' });
     }
   };
@@ -47,13 +49,14 @@ export const CentroDatos = () => {
     formData.append('file', archivoCSV);
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post('http://127.0.0.1:8000/api/reportes/importar/previsualizar', formData, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+      // Petición limpia usando api. Solo declaramos el Content-Type para subir archivos
+      const response = await api.post('/reportes/importar/previsualizar', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
       setDatosPrevisualizacion(response.data);
       setMensaje({ texto: `Se extrajeron ${response.data.total_encontrados} filas del CSV.`, tipo: 'exito' });
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: 'Error al procesar. Asegúrate de que sea un CSV con la misma estructura que el exportado.', tipo: 'error' });
     } finally {
       setCargando(false);
@@ -62,16 +65,15 @@ export const CentroDatos = () => {
 
   const guardarImportacionMasiva = async () => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('http://127.0.0.1:8000/api/reportes/importar/guardar', { datos: datosPrevisualizacion.datos_extraidos }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Petición limpia usando api
+      await api.post('/reportes/importar/guardar', { datos: datosPrevisualizacion.datos_extraidos });
       setMensaje({ texto: '¡Historial importado a la Base de Datos!', tipo: 'exito' });
       setDatosPrevisualizacion(null);
       const fileInput = document.getElementById('file-upload');
       if (fileInput) fileInput.value = '';
       setArchivoCSV(null);
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: 'Error al guardar los datos.', tipo: 'error' });
     }
   };

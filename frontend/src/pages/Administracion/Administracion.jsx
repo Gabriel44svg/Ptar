@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../services/api'
+import api from '../../services/api'; // Usamos tu instancia configurada
 import './Administracion.css';
 import fondo from '../../assets/img/fondo.png';
 
@@ -10,7 +10,7 @@ export const Administracion = () => {
   
   // Estados para el formulario de nuevo usuario
   const [mostrarForm, setMostrarForm] = useState(false);
-  const [formUsuario, setFormUsuario] = useState({ nombre_completo: '', correo: '', password: '', rol: 'Usuario de Registro' });
+  const [formUsuario, setFormUsuario] = useState({ nombre_completo: '', correo: '', password: '', rol: 'Lector' }); // Ajusté el valor inicial a 'Lector'
 
   const usuarioRol = localStorage.getItem('usuarioRol');
   const esSuperAdmin = usuarioRol === 'Super Admin';
@@ -20,17 +20,17 @@ export const Administracion = () => {
   useEffect(() => { cargarDatosAdmin(); }, []);
 
   const cargarDatosAdmin = async () => {
-    const token = localStorage.getItem('token');
-    const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      const resAuditoria = await axios.get('http://127.0.0.1:8000/api/admin/auditoria', config);
+      // Peticiones limpias usando api
+      const resAuditoria = await api.get('/admin/auditoria');
       setAuditoria(resAuditoria.data);
 
       if (tieneAccesoUsuarios) {
-        const resUsuarios = await axios.get('http://127.0.0.1:8000/api/admin/usuarios', config);
+        const resUsuarios = await api.get('/admin/usuarios');
         setUsuarios(resUsuarios.data);
       }
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: 'Error al cargar los datos del servidor.', tipo: 'error' });
     }
   };
@@ -38,15 +38,14 @@ export const Administracion = () => {
   const handleCrearUsuario = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('http://127.0.0.1:8000/api/admin/usuarios', formUsuario, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Petición limpia usando api
+      await api.post('/admin/usuarios', formUsuario);
       setMensaje({ texto: 'Usuario creado exitosamente.', tipo: 'exito' });
       setMostrarForm(false);
-      setFormUsuario({ nombre_completo: '', correo: '', password: '', rol: 'Usuario de registro' });
+      setFormUsuario({ nombre_completo: '', correo: '', password: '', rol: 'Lector' });
       cargarDatosAdmin();
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: error.response?.data?.detail || 'Error al crear usuario.', tipo: 'error' });
     }
   };
@@ -54,19 +53,17 @@ export const Administracion = () => {
   const eliminarUsuario = async (id_usuario) => {
     if (!window.confirm('¿Estás seguro de eliminar este usuario de forma permanente?')) return;
     try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://127.0.0.1:8000/api/admin/usuarios/${id_usuario}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Petición limpia usando api
+      await api.delete(`/admin/usuarios/${id_usuario}`);
       setMensaje({ texto: 'Usuario eliminado.', tipo: 'exito' });
       cargarDatosAdmin();
     } catch (error) {
+      console.error(error);
       setMensaje({ texto: error.response?.data?.detail || 'Error al eliminar usuario.', tipo: 'error' });
     }
   };
 
   return (
-  
       <div
         style={{
           backgroundImage: `url(${fondo})`,
@@ -102,7 +99,7 @@ export const Administracion = () => {
                   <input type="text" required value={formUsuario.nombre_completo} onChange={e => setFormUsuario({...formUsuario, nombre_completo: e.target.value})} />
                 </div>
                 <div className="input-group-vertical w-50">
-                  <label>Correo UNAM</label>
+                  <label>Correo Electrónico</label>
                   <input type="email" required value={formUsuario.correo} onChange={e => setFormUsuario({...formUsuario, correo: e.target.value})} />
                 </div>
               </div>
@@ -113,7 +110,6 @@ export const Administracion = () => {
                 </div>
                 <div className="input-group-vertical w-50">
                   <label>Rol de Acceso</label>
-                  {/* AQUÍ ESTÁ LA MAGIA: Solo opciones válidas para la DB */}
                   <select value={formUsuario.rol} onChange={e => setFormUsuario({...formUsuario, rol: e.target.value})}>
                     {esSuperAdmin && <option value="Super Admin">Super Admin</option>}
                     {esSuperAdmin && <option value="Administrador">Administrador</option>}
@@ -157,7 +153,6 @@ export const Administracion = () => {
         <p className="instrucciones">Registro inalterable de modificaciones y eliminaciones críticas en el sistema.</p>
         <div className="tabla-responsive mt-2">
           <table className="tabla-historial tabla-auditoria">
-            {/* Aquí va la estructura de tu tabla de auditoría exactamente como la tenías en el paso anterior */}
              <thead>
               <tr><th>No.</th><th>Fecha y Hora</th><th>Responsable</th><th>Acción</th><th>Tabla Afectada</th><th>Registro (ID)</th><th>Valor Anterior</th></tr>
             </thead>

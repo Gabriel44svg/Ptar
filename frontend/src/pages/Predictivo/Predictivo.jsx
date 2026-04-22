@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../services/api'
+import api from '../../services/api'; // Usamos la instancia centralizada
 import html2canvas from 'html2canvas';
 import { 
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend 
@@ -39,18 +39,16 @@ export const Predictivo = () => {
 
   const cargarDatosPredictivos = async () => {
     setCargando(true);
-    const token = localStorage.getItem('token');
-    const config = { headers: { Authorization: `Bearer ${token}` } };
 
     try {
-      // 1. Cargar datos para la gráfica (ahora enviamos la 'agrupacion')
-      const urlGrafica = `http://127.0.0.1:8000/api/predictivo/graficas?id_proceso=${parametroActivo}&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}&agrupacion=${agrupacion}`;
-      const resGrafica = await axios.get(urlGrafica, config);
+      // 1. Cargar datos para la gráfica usando 'api'. (El token viaja automáticamente)
+      const urlGrafica = `/predictivo/graficas?id_proceso=${parametroActivo}&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}&agrupacion=${agrupacion}`;
+      const resGrafica = await api.get(urlGrafica);
       setDatosGrafica(resGrafica.data);
 
       // 2. Cargar Matriz de Markov (Solo aplica para parámetros químicos, no para Riego)
       if (parametroActivo !== 'riego') {
-        const resMarkov = await axios.get(`http://127.0.0.1:8000/api/predictivo/markov?id_proceso=${parametroActivo}`, config);
+        const resMarkov = await api.get(`/predictivo/markov?id_proceso=${parametroActivo}`);
         setDatosMarkov(resMarkov.data);
       } else {
         setDatosMarkov(null);

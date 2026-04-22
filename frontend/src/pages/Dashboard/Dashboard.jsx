@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../services/api'
+import api from '../../services/api'; // Usamos tu instancia configurada
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment, Float } from '@react-three/drei';
 import fondo from '../../assets/img/fondo.png';
@@ -26,11 +26,9 @@ export const Dashboard = () => {
 
   const cargarIndicadores = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-
       // 1. Obtener datos de Riego (Para la Gota y Nivel de Tanque)
-      const resRiego = await axios.get('http://127.0.0.1:8000/api/riego/registros', config);
+      // Petición limpia usando api
+      const resRiego = await api.get('/riego/registros');
       const datosRiego = resRiego.data;
       
       if (datosRiego.length > 0) {
@@ -40,7 +38,8 @@ export const Dashboard = () => {
       }
 
       // 2. Obtener datos Químicos (Para los KPIs de calidad)
-      const resLab = await axios.get('http://127.0.0.1:8000/api/laboratorio/registros', config);
+      // Petición limpia usando api
+      const resLab = await api.get('/laboratorio/registros');
       const datosLab = resLab.data;
 
       if (datosLab.length > 0) {
