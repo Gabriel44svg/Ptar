@@ -25,7 +25,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     # Generar token JWT real
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": usuario.correo, "rol": usuario.rol.value},
+        # AQUÍ ESTABA EL ERROR: Cambiamos usuario.rol.value por usuario.rol
+        data={"sub": usuario.correo, "rol": usuario.rol},
         expires_delta=access_token_expires
     )
     
